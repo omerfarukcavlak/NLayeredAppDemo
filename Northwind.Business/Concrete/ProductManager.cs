@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Data.Entity.Infrastructure;
 using Northwind.Business.ValidationRules.FluentValidation;
 using FluentValidation;
+using Northwind.Business.Utilities;
 
 namespace Northwind.Business.Concrete
 {
@@ -25,12 +26,7 @@ namespace Northwind.Business.Concrete
 
         public void Add(Product product)
         {
-            ProductValidator productValidator = new ProductValidator();
-            var result = productValidator.Validate(product);
-            if (result.Errors.Count>0)
-            {
-                throw new ValidationException(result.Errors);
-            }
+            ValidationTool.Validate(new ProductValidator(), product);
             _productDal.Add(product);
         }
 
@@ -66,6 +62,7 @@ namespace Northwind.Business.Concrete
 
         public void Update(Product product)
         {
+            ValidationTool.Validate(new ProductValidator(), product);
             _productDal.Update(product);
         }
     }
